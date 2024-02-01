@@ -13,3 +13,5 @@ Then edit `quiz_alarm.py` to fill necessary info like session cookie and url.
 ```shell
 python3 quiz_alarm.py
 ```
+
+The alarm will notify you when the quiz is posted or starts.
