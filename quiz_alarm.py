@@ -11,6 +11,15 @@ from click import confirm
 from plyer import notification
 
 
+def connection_error():
+    notification.notify(
+        title="Connection Failed",
+        message="Connection to Canvas failed. Check the terminal for more information.",
+        app_name="Quiz Alert",
+        timeout=60,
+    )
+
+
 def play_alarm():
 
     print("Quiz status changed!!!", flush=True)
@@ -33,11 +42,18 @@ def play_alarm():
 
 
 def get_soup_from_url(url):
-    response = requests.get(
-        url,
-        params={"access_token": access_token},
-        timeout=10,
-    )
+    try:
+        response = requests.get(
+            url,
+            params={"access_token": access_token},
+            timeout=10,
+        )
+    except Exception:
+        connection_error()
+        exit(1)
+    if response.status_code != 200:
+        connection_error()
+        exit(1)
     return BeautifulSoup(response.text, "html.parser")
 
 
@@ -45,10 +61,7 @@ def check_is_working(soup):
     obj = json.loads(str(soup))
     # print(obj)
     if "errors" in obj:
-        print("Error!!!")
-        play_alarm()
-        while pygame.mixer.music.get_busy() == True:
-            continue
+        connection_error()
 
 
 def get_all_quiz():
