@@ -7,29 +7,26 @@ from bs4 import BeautifulSoup
 import pygame
 from priv_sets import access_token, course_id
 import json
+from click import confirm
 from plyer import notification
-
-notification.notify(
-    title="Test",
-    message="If you see this notification, the quiz alarm's notification system is working properly. ",
-    app_name="Quiz Alert",
-    timeout=10,
-)
 
 
 def play_alarm():
 
     print("Quiz status changed!!!", flush=True)
-    notification.notify(
-        title="Quiz Status Changed",
-        message="The quiz status for the course has changed! Checkout whether the quiz is released or has started NOW!",
-        app_name="Quiz Alert",
-        timeout=60,
-    )
 
-    pygame.mixer.init()
-    pygame.mixer.music.load("oversimplified-alarm-clock-113180.mp3")
-    pygame.mixer.music.play()
+    if send_notification:
+        notification.notify(
+            title="Quiz Status Changed",
+            message="The quiz status for the course has changed! Checkout whether the quiz is released or has started NOW!",
+            app_name="Quiz Alert",
+            timeout=60,
+        )
+
+    if play_alarm:
+        pygame.mixer.init()
+        pygame.mixer.music.load("oversimplified-alarm-clock-113180.mp3")
+        pygame.mixer.music.play()
 
 
 # play_alarm()
@@ -74,6 +71,22 @@ def check():
             play_alarm()
         old = new
         time.sleep(20)
+
+
+play_sound = confirm(
+    "Play alarm sound when quiz status changes?", default=False
+)
+send_notification = confirm(
+    "Trigger system notification when quiz status changes?", default=True
+)
+
+if send_notification:
+    notification.notify(
+        title="Test",
+        message="If you see this notification, the quiz alarm's notification system is working properly. ",
+        app_name="Quiz Alert",
+        timeout=10,
+    )
 
 
 check()
