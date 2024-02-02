@@ -8,10 +8,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Then edit `quiz_alarm.py` to fill necessary info like session cookie and url.
+Then edit `priv_sets_sample.py` to fill necessary info like access token and course id. Remember to rename it to `priv_sets.py`
 
 ```shell
 python3 quiz_alarm.py
 ```
 
-The alarm will notify you when the quiz is posted or starts.
+The alarm will notify you when the quiz status for this course has changed.
