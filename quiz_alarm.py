@@ -9,6 +9,13 @@ from priv_sets import access_token, course_id
 import json
 from plyer import notification
 
+notification.notify(
+    title="Test",
+    message="If you see this notification, the quiz alarm's notification system is working properly. ",
+    app_name="Quiz Alert",
+    timeout=10,
+)
+
 
 def play_alarm():
 
@@ -25,7 +32,7 @@ def play_alarm():
     pygame.mixer.music.play()
 
 
-play_alarm()
+# play_alarm()
 
 
 def get_soup_from_url(url):
