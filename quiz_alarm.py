@@ -12,12 +12,20 @@ from plyer import notification
 
 
 def connection_error():
-    notification.notify(
-        title="Connection Failed",
-        message="Connection to Canvas failed. Check the terminal for more information.",
-        app_name="Quiz Alert",
-        timeout=60,
-    )
+    print("Connection error!!!", flush=True)
+    if send_notification:
+        notification.notify(
+            title="Connection Failed",
+            message="Connection to Canvas failed. Check the terminal for more information.",
+            app_name="Quiz Alert",
+            timeout=60,
+        )
+    if play_sound:
+        pygame.mixer.init()
+        pygame.mixer.music.load("oversimplified-alarm-clock-113180.mp3")
+        pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy():
+            pygame.time.Clock().tick(10)
 
 
 def play_alarm():
@@ -36,6 +44,8 @@ def play_alarm():
         pygame.mixer.init()
         pygame.mixer.music.load("oversimplified-alarm-clock-113180.mp3")
         pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy():
+            pygame.time.Clock().tick(10)
 
 
 # play_alarm()
@@ -101,7 +111,4 @@ if send_notification:
         timeout=10,
     )
 
-try:
-    check()
-except Exception:
-    play_alarm()
+check()
