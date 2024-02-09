@@ -32,7 +32,7 @@ def play_alarm():
             timeout=60,
         )
 
-    if play_alarm:
+    if play_sound:
         pygame.mixer.init()
         pygame.mixer.music.load("oversimplified-alarm-clock-113180.mp3")
         pygame.mixer.music.play()
@@ -101,5 +101,7 @@ if send_notification:
         timeout=10,
     )
 
-
-check()
+try:
+    check()
+except Exception:
+    play_alarm()
