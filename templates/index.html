@@ -26,7 +26,7 @@
 
     /* Main container */
     .container {
-      max-width: 380px;
+      max-width: 360px;
       /* Max width */
       width: 100%;
       padding: 20px;
@@ -129,7 +129,7 @@
     }
 
     /* Media Query for responsiveness */
-    @media (max-width: 480px) {
+    @media (max-width: 400px) {
       .container {
         margin: 16px;
         /* Spacing around the container on smaller screens */
@@ -152,7 +152,7 @@
     .switch {
       position: relative;
       display: inline-block;
-      width: 88px;
+      width: 70px !important;
       /* Width of the switch container */
       height: 34px;
       /* Height of the switch container */
@@ -199,9 +199,9 @@
     /* Position the handle to the right when checked */
     /* Adjust translateX so the handle does not exceed the switch background */
     input:checked+.slider:before {
-      -webkit-transform: translateX(30px);
-      -ms-transform: translateX(30px);
-      transform: translateX(30px);
+      -webkit-transform: translateX(14px);
+      -ms-transform: translateX(14px);
+      transform: translateX(14px);
       /* this value should be adjusted so the handle fits within the switch background */
     }
 
@@ -232,7 +232,7 @@
 
     <div class="form-group">
       <label for="playSound" class="switch-container">
-        <span class="switch-text">Play alarm sound when quiz status changes/connection fails?</span>
+        <span class="switch-text">Play alarm sound when quiz status changes, or connection fails?</span>
         <div class="switch">
           <input type="checkbox" id="playSound" checked>
           <span class="slider round"></span>
