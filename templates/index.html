@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UM Canvas Quiz Alarm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Base and background */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #121212;
+      /* Dark background */
+      color: #e0e0e0;
+      /* Light text */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      /* Fullscreen */
+      box-sizing: border-box;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 380px;
+      /* Max width */
+      width: 100%;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+      background: #1e1e1e;
+      /* Container background */
+    }
+
+    /* Headings and Text Elements */
+    h1 {
+      color: #fff;
+      /* White text for better contrast */
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    label {
+      margin-bottom: 8px;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 8px;
+      /* Extra space to the right of checkboxes */
+    }
+
+    input[type="text"] {
+      width: calc(100% - 16px);
+      /* Full-width minus padding */
+      padding: 10px;
+      border-radius: 5px;
+      /* Rounded corners */
+      border: none;
+      /* No border */
+      background-color: #333;
+      color: #e0e0e0;
+    }
+
+    /* Button styling */
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s;
+      font-weight: 500;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button:disabled {
+      background-color: #424242;
+      color: #bbb;
+      cursor: default;
+    }
+
+    /* Status and Token Info */
+    #tokenInfo,
+    #statusMessage {
+      display: none;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    #tokenInfo {
+      background-color: #b83228;
+      color: #fff;
+    }
+
+    #statusMessage {
+      background-color: #333;
+      border: 1px solid #555;
+      color: #e0e0e0;
+    }
+
+    /* Placeholder color */
+    ::placeholder {
+      color: #bbb;
+      opacity: 1;
+    }
+
+    .instr {
+      color: #666;
+      margin-top: 0;
+    }
+
+    /* Media Query for responsiveness */
+    @media (max-width: 480px) {
+      .container {
+        margin: 16px;
+        /* Spacing around the container on smaller screens */
+      }
+    }
+
+    .switch-container {
+      display: flex;
+      align-items: center;
+      /* This will vertically center align the text and the switch */
+      justify-content: space-between;
+      /* This will separate the switch and the text */
+    }
+
+    .switch-text {
+      flex-grow: 1;
+    }
+
+    /* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 88px;
+      /* Width of the switch container */
+      height: 34px;
+      /* Height of the switch container */
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #5f5f5f;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 34px;
+      /* Make the slider background rounded */
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      /* space from the left edge */
+      bottom: 4px;
+      /* space from the bottom edge */
+      background-color: rgb(58, 58, 58);
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 50%;
+      /* Make the slider handle rounded */
+    }
+
+    /* Position the handle to the right when checked */
+    /* Adjust translateX so the handle does not exceed the switch background */
+    input:checked+.slider:before {
+      -webkit-transform: translateX(30px);
+      -ms-transform: translateX(30px);
+      transform: translateX(30px);
+      /* this value should be adjusted so the handle fits within the switch background */
+    }
+
+    /* Change the slider background color when checked */
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    /* Add focus styles for the slider */
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    /* Rounded slider background (already have this style, it's included for completeness) */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>UM Canvas Quiz Alarm</h1>
+
+    <div class="form-group">
+      <label for="playSound" class="switch-container">
+        <span class="switch-text">Play alarm sound when quiz status changes/connection fails?</span>
+        <div class="switch">
+          <input type="checkbox" id="playSound" checked>
+          <span class="slider round"></span>
+        </div>
+      </label>
+    </div>
+
+    <!-- <div class="form-group">
+      <label for="playSound">Play alarm sound when quiz status changes/connection fails?</label>
+      <input type="checkbox" id="playSound" checked>
+    </div> -->
+
+    <div class="form-group" style="display: none;">
+      <label for="sendNotification">Trigger system notification when quiz status changes?</label>
+      <input type="checkbox" id="sendNotification" checked>
+    </div>
+
+    <div class="form-group">
+      <label for="courseId">Course ID:</label>
+      <input type="text" id="courseId" placeholder="Course ID">
+      <p class="instr">You can find it in the URL of your course page after "/courses/". For 24WN EECS496, the
+        course URL is
+        "https://umich.instructure.com/courses/653106", so the Course ID is "653106".</p>
+    </div>
+
+    <div class="form-group">
+      <label for="accessToken">Canvas Access Token:</label>
+      <input type="text" id="accessToken" placeholder="Access Token">
+      <p class="instr">This gives access to course info w/o uniquename, password and duo auth.</p>
+    </div>
+
+    <div class="form-group">
+      <button id="startButton" onclick="startChecking()">Start Checking</button>
+      <button id="stopButton" onclick="stopChecking()" disabled>Stop Checking</button>
+      <button id="stopAlarmButton" onclick="stopAlarm()" disabled>Stop Alarm</button>
+    </div>
+    <div id="statusMessage">
+      <p id="statusText"></p>
+    </div>
+    <div id="tokenInfo">
+      <p>Access token not found. Please generate a new access token from UM Canvas, and paste it here:</p>
+      <button onclick="generateAccessToken()">Generate Access Token</button>
+    </div>
+  </div>
+
+
+  <!-- Audio element for notification alarm -->
+  <audio id="alarmSound"
+    src="https://github.com/zijunhz/EECS496_quiz_alarm/raw/main/oversimplified-alarm-clock-113180.mp3"></audio>
+
+
+  <script>
+    let startButton = document.getElementById("startButton");
+    let playSoundCheckbox = document.getElementById("playSound");
+    let sendNotificationCheckbox = document.getElementById("sendNotification");
+    let courseIdInput = document.getElementById("courseId");
+    let accessTokenInput = document.getElementById("accessToken");
+    let alarmSound = document.getElementById("alarmSound");
+    let intervalId;
+    let prevResponse = null;
+    let stopAlarmButton = document.getElementById("stopAlarmButton");
+
+    let statusMessage = document.getElementById("statusMessage");
+    let statusText = document.getElementById("statusText");
+
+    function showMessage (message) {
+      statusText.textContent = message;
+      statusMessage.style.display = "block"; // Show the message box
+    }
+
+    function showErrorMessage (message) {
+      stopChecking();
+      playAlarmSound();
+      updateButtonStates();
+      showMessage(message); // shows the error message to the user
+    }
+
+    function hideMessage () {
+      statusMessage.style.display = "none"; // Hide the message box
+    }
+
+    function clearMessageAfterDelay (delayMs) {
+      setTimeout(hideMessage, delayMs);
+    }
+    function updateTokenInfoDisplay () {
+      // Show or hide the token info based on whether an access token is present
+      document.getElementById("tokenInfo").style.display = accessTokenInput.value ? "none" : "block";
+    }
+
+    function updateStartButtonState () {
+      startButton.disabled = !courseIdInput.value || !accessTokenInput.value || intervalId !== undefined || !alarmSound.paused;
+    }
+
+    function updateStopCheckingButtonState () {
+      // Link the stopCheckingButton with its element
+      let stopCheckingButton = document.getElementById("stopButton");
+      // Enable the stop checking button only if there's an ongoing checking process
+      stopCheckingButton.disabled = intervalId === undefined;
+    }
+
+    function updateStopAlarmButtonState () {
+      // Enable the stop alarm button only if the alarm is currently playing
+      stopAlarmButton.disabled = alarmSound.paused;
+    }
+
+    // Make sure to call this method when you want to reflect the button states correctly
+    function updateButtonStates () {
+      updateStartButtonState();
+      updateStopCheckingButtonState();
+      updateStopAlarmButtonState(); // Update this function if "stop alarm" logic is required elsewhere
+      updateTokenInfoDisplay();
+    }
+
+    // Load initial values from localStorage
+    courseIdInput.value = localStorage.getItem('courseId') || '';
+    accessTokenInput.value = localStorage.getItem('accessToken') || '';
+
+    courseIdInput.addEventListener('input', function (event) {
+      localStorage.setItem('courseId', event.target.value.trim());
+      updateButtonStates();
+    });
+
+    accessTokenInput.addEventListener('input', function (event) {
+      localStorage.setItem('accessToken', event.target.value.trim());
+      updateButtonStates();
+    });
+
+    if (!accessTokenInput.value) {
+      document.getElementById("tokenInfo").style.display = "block";
+    }
+
+    if (Notification.permission !== "granted" && Notification.permission !== 'denied') {
+      Notification.requestPermission();
+    }
+
+    function handleNotification (message) {
+      if (Notification.permission === "granted") {
+        new Notification(message);
+      }
+    }
+
+    function connectionError () {
+      console.log("Connection error!!!");
+      if (sendNotificationCheckbox.checked) {
+        handleNotification("Connection error!");
+      }
+      playAlarmSound();
+      stopChecking("Connection error! Please check your network and try again. Checking stopped.");
+    }
+
+    function playAlarmSound () {
+      // Play the sound if the checkbox is checked and update the alarm button state
+      if (playSoundCheckbox.checked) {
+        alarmSound.play();
+        stopAlarmButton.disabled = false;
+      }
+    }
+
+    function stopAlarm () {
+      // Stop the sound and disable the stop alarm button
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+      stopAlarmButton.disabled = true;
+      updateButtonStates();
+    }
+
+    function connectionError () {
+      console.log("Connection error!!!");
+      if (sendNotificationCheckbox.checked) {
+        handleNotification("Connection error!");
+      }
+      playAlarmSound();
+      stopChecking("Connection error! Please check your network and try again. Checking stopped.");
+    }
+
+    function playAlarm () {
+      console.log("Quiz status changed!!!");
+      let realTime = new Date().toLocaleTimeString();
+      if (sendNotificationCheckbox.checked) {
+        handleNotification("Quiz status changed!");
+      }
+      // Only play the alarm, do not stop the checking here
+      playAlarmSound();
+      showMessage(`Quiz status changed at ${realTime}. Sound alarm!`);
+      // Do not call stopChecking here.
+      // The alarm will continue to sound even if checking does not stop.
+    }
+
+    async function getQuizData () {
+      const courseId = courseIdInput.value.trim();
+      const accessToken = accessTokenInput.value.trim();
+
+      if (!courseId || !accessToken) {
+        showErrorMessage("Course ID and access token are required.");
+        return;
+      }
+
+      realTime = new Date().toLocaleTimeString();
+
+      showMessage(`Checking started. Waiting for quiz status changes... ${realTime}`);
+
+      // Timeout in milliseconds
+      const fetchTimeout = 15000; // e.g., 5 seconds
+
+      // Define a promise that will reject after a timeout
+      const timeoutSignal = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error("The request timed out."));
+        }, fetchTimeout);
+      });
+
+      try {
+        // Start both promises concurrently
+        const response = await Promise.race([
+          fetch(`/quiz_alarm/get/?course_id=${courseId}&access_token=${accessToken}`),
+          timeoutSignal
+        ]);
+
+        if (!response.ok) {
+          // Attempt to parse the error message from the response
+          const errorData = await response.json();
+          throw new Error(errorData.error || `${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (prevResponse && JSON.stringify(data) !== JSON.stringify(prevResponse)) {
+          stopChecking();
+          playAlarm();
+          updateButtonStates();
+        }
+
+        prevResponse = data; // Always update the previous response
+      } catch (error) {
+        showErrorMessage(error.message || "An unexpected error occurred.");
+      }
+    }
+
+    function startChecking () {
+      if (!courseIdInput.value || !accessTokenInput.value) {
+        return;
+      }
+      stopAlarmButton.disabled = playSoundCheckbox.checked;
+      prevResponse = false
+      getQuizData();
+      intervalId = setInterval(getQuizData, 20000); // Starts the periodic checking
+      updateButtonStates(); // Update all button states when checking starts
+    }
+
+
+    function stopChecking (message) {
+      clearInterval(intervalId);
+      intervalId = undefined; // Clear the intervalId to indicate that checking has stopped
+      // Do not call stopAlarm here.
+      // Stopping of the checking process and the alarm sound are separate concerns.
+      updateButtonStates(); // Update all button states when checking stops
+      showMessage(message || "Checking stopped. Click 'Start Checking' to continue monitoring.");
+    }
+
+
+
+    function generateAccessToken () {
+      // Specify the URL and window properties
+      var url = 'https://umich.instructure.com/profile/settings#access_tokens_holder';
+      var windowName = '_blank'; // Opens in a new window/tab
+      var windowFeatures = 'resizable,scrollbars,status'; // Optional features
+
+      // Open the new window
+      window.open(url, windowName, windowFeatures);
+    }
+
+    updateButtonStates();
+  </script>
+</body>
+
+</html>
