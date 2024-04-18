@@ -26,7 +26,7 @@
 
     /* Main container */
     .container {
-      max-width: 360px;
+      max-width: 380px;
       /* Max width */
       width: 100%;
       padding: 20px;
@@ -139,33 +139,26 @@
     .switch-container {
       display: flex;
       align-items: center;
-      /* This will vertically center align the text and the switch */
       justify-content: space-between;
-      /* This will separate the switch and the text */
     }
 
     .switch-text {
       flex-grow: 1;
     }
 
-    /* The switch - the box around the slider */
     .switch {
       position: relative;
       display: inline-block;
-      width: 70px !important;
-      /* Width of the switch container */
+      width: 70px;
       height: 34px;
-      /* Height of the switch container */
     }
 
-    /* Hide default HTML checkbox */
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
 
-    /* The slider */
     .slider {
       position: absolute;
       cursor: pointer;
@@ -177,7 +170,6 @@
       -webkit-transition: .4s;
       transition: .4s;
       border-radius: 34px;
-      /* Make the slider background rounded */
     }
 
     .slider:before {
@@ -186,36 +178,29 @@
       height: 26px;
       width: 26px;
       left: 4px;
-      /* space from the left edge */
       bottom: 4px;
-      /* space from the bottom edge */
       background-color: rgb(58, 58, 58);
       -webkit-transition: .4s;
       transition: .4s;
       border-radius: 50%;
-      /* Make the slider handle rounded */
     }
 
-    /* Position the handle to the right when checked */
-    /* Adjust translateX so the handle does not exceed the switch background */
+    /* Change translateX in proportion to the switch width */
+    /* assuming the handle size is 26px plus there are 4px left margin and 4px right margin (8px total)*/
     input:checked+.slider:before {
       -webkit-transform: translateX(14px);
       -ms-transform: translateX(14px);
       transform: translateX(14px);
-      /* this value should be adjusted so the handle fits within the switch background */
     }
 
-    /* Change the slider background color when checked */
     input:checked+.slider {
       background-color: #2196F3;
     }
 
-    /* Add focus styles for the slider */
     input:focus+.slider {
       box-shadow: 0 0 1px #2196F3;
     }
 
-    /* Rounded slider background (already have this style, it's included for completeness) */
     .slider.round {
       border-radius: 34px;
     }
