@@ -1,6 +1,25 @@
-# UMich EECS496 Quiz Alarm (for WN24)
+# UMich Canvas Quiz Alarm
+
+Originally UMich EECS496 Quiz Alarm (for WN24)
 
 ## How to run it
+
+### 1. Use the web service
+
+[UM Canvas Quiz Alarm](https://wt.zpatronus.top/quiz_alarm/)
+
+If you want to deploy the website on your machine, you need to install `requests` and `flask` via `pip`.
+
+To have a production deployment, you may also want to install `gunicorn`.
+
+```bash
+# start with flask (dev)
+flask --app quiz_alarm_server.py run --debug -h 0.0.0.0
+# start with gunicorn (production)
+gunicorn -w 1 -b 0.0.0.0:10102 quiz_alarm_server:app
+```
+
+### 2. Run it locally with Python script
 
 ```shell
 python3 -m venv venv
