@@ -1,6 +1,8 @@
 # UMich Canvas Quiz Alarm
 
-Originally UMich EECS496 Quiz Alarm (for WN24)
+The scripts that helped me get an A+ in EECS496.
+
+Originally named "UMich EECS496 Quiz Alarm" (for WN24)
 
 ## How to run it
 
