@@ -8,7 +8,7 @@ Originally named "UMich EECS496 Quiz Alarm" (for WN24)
 
 ### 1. Use the web service
 
-[UM Canvas Quiz Alarm](https://wt.zpatronus.top/quiz_alarm/)
+~~[UM Canvas Quiz Alarm](https://wt.zpatronus.top/quiz_alarm/)~~ stopped service
 
 If you want to deploy the website on your machine, you need to install `requests` and `flask` via `pip`.
 
