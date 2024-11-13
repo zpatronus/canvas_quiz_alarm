@@ -1,4 +1,4 @@
-# UMich Canvas Quiz Alarm
+# Canvas Quiz Alarm
 
 The scripts that helped me get an A+ in EECS496.
 
